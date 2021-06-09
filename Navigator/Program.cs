@@ -10,11 +10,36 @@ namespace Navigator
     {
         static void Main(string[] args)
         {
-            
+            Console.Title = "Navigator";
             string[] citysNames = GetCitysNames();
-            uint?[,] adjacencyMatrix = GetAdjacencyMatrix(citysNames);
+            int[,] adjacencyMatrix = GetAdjacencyMatrix(citysNames);
+            
             Graph graph = new Graph(citysNames, adjacencyMatrix);
             graph.Print();
+            Console.WriteLine();
+            
+            string firstCityName, lastCityName;
+            List<string> route;
+
+            Console.WriteLine("Введите название стартового города:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            firstCityName = Console.ReadLine();
+            Console.ForegroundColor = ConsoleColor.Green;
+
+            Console.WriteLine("Введите название конечного города:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            lastCityName = Console.ReadLine();
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("Длинна кратчайшего пути: " + graph.AlgorithmDijkstra(out route, firstCityName, lastCityName));
+
+            foreach (var item in route)
+            {
+                Console.Write(" -> "+item);
+            }
+            Console.WriteLine();
+            Console.WriteLine("Нажмите ESC чтобы закрыть программу");
+            Console.ForegroundColor = ConsoleColor.Green;
+            while (Console.ReadKey().Key != ConsoleKey.Escape) ;
         }
 
         /// <summary>
@@ -97,11 +122,11 @@ namespace Navigator
         /// Считывает из консоли длинну дорог от каждого города до каждого
         /// </summary>
         /// <param name="citysNames">Имена городов</param>
-        /// <returns>Возвращает матрицу смежности,где null - отсутвие дороги</returns>
-        static uint?[,] GetAdjacencyMatrix(string[] citysNames)
+        /// <returns>Возвращает матрицу смежности,где -1 - отсутвие дороги</returns>
+        static int[,] GetAdjacencyMatrix(string[] citysNames)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            uint?[,] adjacencyMatrix = new uint?[citysNames.Length, citysNames.Length];
+            int[,] adjacencyMatrix = new int[citysNames.Length, citysNames.Length];
             string input;
             int temp;
             for (int i = 0; i < citysNames.Length; i++)
@@ -111,7 +136,7 @@ namespace Navigator
                     Console.Clear();
                     if (i == j)
                     {
-                        adjacencyMatrix[j, i] = null;
+                        adjacencyMatrix[j, i] = -1;
                         continue;
                     }
 
@@ -124,8 +149,8 @@ namespace Navigator
                     
                     if (input == "-")
                     {
-                        adjacencyMatrix[i, j] = null;
-                        adjacencyMatrix[j, i] = null;
+                        adjacencyMatrix[i, j] = -1;
+                        adjacencyMatrix[j, i] = -1;
                     }
                     else 
                     {
@@ -165,8 +190,8 @@ namespace Navigator
                             continue;
                         }
 
-                        adjacencyMatrix[i, j] = (uint)temp;
-                        adjacencyMatrix[j, i] = (uint)temp;
+                        adjacencyMatrix[i, j] = temp;
+                        adjacencyMatrix[j, i] = temp;
                     }
 
                 }
