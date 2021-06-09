@@ -10,9 +10,11 @@ namespace Navigator
     {
         static void Main(string[] args)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            string[] CitysNames = GetCitysNames();
-            uint?[,] AdjacencyMatrix = GetAdjacencyMatrix(CitysNames);
+            
+            string[] citysNames = GetCitysNames();
+            uint?[,] adjacencyMatrix = GetAdjacencyMatrix(citysNames);
+            Graph graph = new Graph(citysNames, adjacencyMatrix);
+            graph.Print();
         }
 
         /// <summary>
@@ -21,7 +23,8 @@ namespace Navigator
         /// <returns>Массив строк с названиями городов</returns>
         static string[] GetCitysNames() 
         {
-            byte CountOfCitys;
+            Console.ForegroundColor = ConsoleColor.Green;
+            byte countOfCitys;
 
             while (true) 
             {
@@ -30,7 +33,7 @@ namespace Navigator
                 try
                 {
                     Console.ResetColor();
-                    CountOfCitys = byte.Parse(Console.ReadLine());
+                    countOfCitys = byte.Parse(Console.ReadLine());
                     Console.ForegroundColor = ConsoleColor.Green;
                 }
                 catch (Exception)
@@ -42,7 +45,7 @@ namespace Navigator
                     continue;
                 }
 
-                if (CountOfCitys<3) 
+                if (countOfCitys<3) 
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Вы ввели слишком маленькое число, так не интересно:3");
@@ -53,10 +56,10 @@ namespace Navigator
                     continue;
                 }
 
-                if (CountOfCitys >10)
+                if (countOfCitys >10)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Вы ввели слишком большое число, вам надоест вводить длинну дорог:3");
+                    Console.WriteLine("Вы ввели слишком большое число, вам надоест вводить длины дорог:3");
                     Console.WriteLine("Нажмите enter и попробуйте заново");
                     Console.ForegroundColor = ConsoleColor.Green;
                     while (Console.ReadKey().Key != ConsoleKey.Enter) ;
@@ -65,45 +68,55 @@ namespace Navigator
                 break;
             }
 
-            string[] Citys = new string[CountOfCitys];
+            string[] citys = new string[countOfCitys];
 
             //TODO добавить проверку на уникальность названий. 
-            for (byte i = 0; i < CountOfCitys; i++)
+            for (byte i = 0; i < countOfCitys; i++)
             {
                 Console.Clear();
-                Console.WriteLine(string.Format("Введите название {0}-ого города:", i+1));
+                Console.WriteLine(string.Format("Введите краткое название {0}-ого города (Не больше 4 символов):", i+1));
                 Console.ResetColor();
-                Citys[i] = Console.ReadLine();
+                citys[i] = Console.ReadLine();
+                if (citys[i].Length < 0 || citys[i].Length > 4)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Название слишком длинное, при выводе матрица съедет(");
+                    Console.WriteLine("Нажмите enter и попробуйте снова");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    while (Console.ReadKey().Key != ConsoleKey.Enter) ;
+                    i--;
+                    continue;
+                }
                 Console.ForegroundColor = ConsoleColor.Green;
             }
 
-            return Citys;
+            return citys;
         }
 
         /// <summary>
         /// Считывает из консоли длинну дорог от каждого города до каждого
         /// </summary>
-        /// <param name="CitysNames">Имена городов</param>
+        /// <param name="citysNames">Имена городов</param>
         /// <returns>Возвращает матрицу смежности,где null - отсутвие дороги</returns>
-        static uint?[,] GetAdjacencyMatrix(string[] CitysNames)
+        static uint?[,] GetAdjacencyMatrix(string[] citysNames)
         {
-            
-            uint?[,] AdjacencyMatrix = new uint?[CitysNames.Length, CitysNames.Length];
+            Console.ForegroundColor = ConsoleColor.Green;
+            uint?[,] adjacencyMatrix = new uint?[citysNames.Length, citysNames.Length];
             string input;
             int temp;
-            for (int i = 0; i < CitysNames.Length; i++)
+            for (int i = 0; i < citysNames.Length; i++)
             {
-                for (int j = i; j < CitysNames.Length; j++)
+                for (int j = i; j < citysNames.Length; j++)
                 {
                     Console.Clear();
                     if (i == j)
                     {
-                        AdjacencyMatrix[j, i] = null;
+                        adjacencyMatrix[j, i] = null;
                         continue;
                     }
 
-                    Console.WriteLine("Можно вводить только целые положительные числа, если дороги нет введи \"-\"");
-                    Console.WriteLine(string.Format("Введите длинну дороги из города {0} в город {1}:",CitysNames[i],CitysNames[j]));
+                    Console.WriteLine("Можно вводить только целые положительные числа, если дороги нет введите \"-\"");
+                    Console.WriteLine(string.Format("Введите длинну дороги из города {0} в город {1}:",citysNames[i],citysNames[j]));
 
                     Console.ResetColor();
                     input = Console.ReadLine();
@@ -111,8 +124,8 @@ namespace Navigator
                     
                     if (input == "-")
                     {
-                        AdjacencyMatrix[i, j] = null;
-                        AdjacencyMatrix[j, i] = null;
+                        adjacencyMatrix[i, j] = null;
+                        adjacencyMatrix[j, i] = null;
                     }
                     else 
                     {
@@ -152,13 +165,13 @@ namespace Navigator
                             continue;
                         }
 
-                        AdjacencyMatrix[i, j] = (uint)temp;
-                        AdjacencyMatrix[j, i] = (uint)temp;
+                        adjacencyMatrix[i, j] = (uint)temp;
+                        adjacencyMatrix[j, i] = (uint)temp;
                     }
 
                 }
             }
-            return AdjacencyMatrix;
+            return adjacencyMatrix;
         }
     }
 }
