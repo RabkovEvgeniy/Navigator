@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Navigator
 {
-    
     class Graph
     {
         private struct Mark
@@ -15,8 +14,8 @@ namespace Navigator
             public int RouteLenth { get; set; }
         }
 
-        private string[] CitysNames;
-        private int[,] AdjacencyMatrix;
+        public string[] CitysNames { get;}
+        public int[,] AdjacencyMatrix { get;}
         public Graph(string[] CitysNames, int[,] AdjacencyMatrix) 
         {
             this.CitysNames = (string[])CitysNames.Clone();
@@ -103,37 +102,7 @@ namespace Navigator
             return marks[lastCityIndex].RouteLenth;
         }
 
-        /// <summary>
-        /// Выводит информацию о графе в виде матрицы смежности.
-        /// </summary>
-        public void Print() 
-        {
-            Console.WriteLine("Матрица смежности:");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write("\t");
-            for (int i = 0; i < CitysNames.Length; i++)
-            {
-                Console.Write(CitysNames[i]+"\t");
-            }
-            Console.WriteLine();
-
-            for (int i = 0; i < AdjacencyMatrix.GetLength(0); i++)
-            {
-                Console.Write(CitysNames[i]+"\t");
-                Console.ForegroundColor = ConsoleColor.Gray;
-                for (int j = 0; j < AdjacencyMatrix.GetLength(1); j++)
-                {
-                    if (AdjacencyMatrix[i, j] == int.MaxValue) 
-                        Console.Write("-");
-                    
-                    Console.Write(AdjacencyMatrix[i,j]+"\t");
-                }
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.Yellow;
-            }
-            Console.ForegroundColor = ConsoleColor.Green;
-        }
+        
 
     }
 }

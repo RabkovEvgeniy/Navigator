@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GraphExtention;
 
 namespace Navigator
 {
@@ -22,23 +23,49 @@ namespace Navigator
             List<string> route;
 
             Console.WriteLine("Введите название стартового города:");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            firstCityName = Console.ReadLine();
-            Console.ForegroundColor = ConsoleColor.Green;
-
-            Console.WriteLine("Введите название конечного города:");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            lastCityName = Console.ReadLine();
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine("Длинна кратчайшего пути: " + graph.AlgorithmDijkstra(out route, firstCityName, lastCityName));
-
-            foreach (var item in route)
+            do
             {
-                Console.Write(" -> "+item);
-            }
-            Console.WriteLine();
-            Console.WriteLine("Нажмите ESC чтобы закрыть программу");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                firstCityName = Console.ReadLine();
+                if(Array.IndexOf(citysNames, firstCityName) != -1) 
+                {
+                    break;
+                }
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Такого города в графе нет!!!");
+                Console.WriteLine("Нажмите enter и попробуйте заново");
+                Console.ForegroundColor = ConsoleColor.Green;
+            } while (true);
+
             Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Введите название конечного города:");
+            do
+            {
+                Console.ForegroundColor = ConsoleColor.Gray;
+                lastCityName = Console.ReadLine();
+                if (Array.IndexOf(citysNames, lastCityName) != -1)
+                {
+                    break;
+                }
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Такого города в графе нет!!!");
+                Console.WriteLine("Нажмите enter и попробуйте заново");
+                Console.ForegroundColor = ConsoleColor.Green;
+                
+            } while (true);
+
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            int i = graph.AlgorithmDijkstra(out route, firstCityName, lastCityName);
+            Console.WriteLine("Длинна кратчайшего пути: " + (i==-1?"-":(""+i)));
+
+            if (route.Count!=0)
+                foreach (var item in route)
+                    Console.Write(" -> "+item);
+                
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Нажмите ESC чтобы закрыть программу");
             while (Console.ReadKey().Key != ConsoleKey.Escape) ;
         }
 
