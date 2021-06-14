@@ -20,7 +20,6 @@ namespace Navigator
             Console.WriteLine();
             
             string firstCityName, lastCityName;
-            List<string> route;
 
             Console.WriteLine("Введите название стартового города:");
             do
@@ -55,7 +54,9 @@ namespace Navigator
             } while (true);
 
             Console.ForegroundColor = ConsoleColor.Magenta;
-            int i = graph.AlgorithmDijkstra(out route, firstCityName, lastCityName);
+
+            (int i, List<string> route) = graph.AlgorithmDijkstra(firstCityName, lastCityName);
+            
             Console.WriteLine("Длинна кратчайшего пути: " + (i==-1?"-":(""+i)));
 
             if (route.Count!=0)
