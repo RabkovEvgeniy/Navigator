@@ -22,15 +22,15 @@ namespace Navigator
             this.AdjacencyMatrix = (int[,])AdjacencyMatrix.Clone();
         }
 
-        public int AlgorithmDijkstra(out List<string> route, string firstCity,string secondCity) 
+        public (int,List<string>) AlgorithmDijkstra(string firstCity,string secondCity)
         {
-            route = new List<string>();
-            
+            List<string> route = new List<string>();
+
             //Находим индексы начальной и конечной вершины и возвращаем -1 если их нет.
             int firstCityIndex = Array.IndexOf(CitysNames, firstCity);
             int lastCityIndex = Array.IndexOf(CitysNames, secondCity);
             if (firstCityIndex == -1 || lastCityIndex == -1)
-                return -1;
+                return (-1,route);
 
             //Создаем и инициализируем массив флагов посещения и марок.
             bool[] isVisited = new bool[CitysNames.Length];
@@ -66,7 +66,7 @@ namespace Navigator
                 if (marks[actualVertexIndex].RouteLenth == int.MaxValue)
                 {
                     if (marks[lastCityIndex].PreviousCityIndex == -1)
-                        return -1;
+                        return (-1,route);
                     else break;
                 }
 
@@ -99,10 +99,7 @@ namespace Navigator
             }
             route.Reverse();
 
-            return marks[lastCityIndex].RouteLenth;
+            return (marks[lastCityIndex].RouteLenth,route);
         }
-
-        
-
     }
 }
